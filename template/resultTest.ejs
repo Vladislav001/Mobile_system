@@ -1,0 +1,257 @@
+<link rel="stylesheet" href="/css/styleResultTest.css">
+<% layout('layout/page') -%>
+<% block('title') -%>
+
+<h1><b>AIT</b></h1>
+  <form class="form-updateStudent" name="cabinet_updateStudent">
+  <div class="informationAboutStudent">
+
+    <table cellspacing="0">
+      <tr>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Age</th>
+          <th>Login</th>
+          <th>Password</th>
+          <th>Current test</th>
+          <th>Current result</th>
+          <th>Test settings</th>
+      </tr>
+      <tr>
+          <td><input name="updateNameStudent" type="text" value="<%=nameStudent%>" class="form-control" id="input-updateNameStudent" placeholder="Name" required></td>
+          <td><SELECT name="updateGenderStudent" type="text" class="form-control" id="input-genderNewUser" required>
+            <% switch (genderStudent) {
+                case "Male": %>
+                  <OPTION><%=genderStudent%></OPTION>
+                  <OPTION>Female</OPTION>
+                   <% break; %><%
+                  case "Female": %>
+                    <OPTION><%=genderStudent%></OPTION>
+                    <OPTION>Male</OPTION>
+                     <% break; %> <% } %>
+          </SELECT></td>
+          <td><input name="updateAgeStudent" type="text" value="<%=ageStudent%>" class="form-control" id="input-updateAgeStudent" placeholder="Age" required pattern="^[ 0-9]+$"></td>
+          <td><input name="updateLoginStudent" type="text" value="<%=loginStudent%>" class="form-control" id="input-updateLoginStudent" placeholder="Login" required></td>
+          <td><input name="updatePasswordStudent" type="text" value="<%=passwordStudent%>" class="form-control" id="input-updatePasswordStudent" placeholder="Password" required pattern="^[a-zA-Z0-9]+${4,}"></td>
+          <td><SELECT name="updateCurrentTest" type="text" class="form-control" id="input-currentTest" required>
+            <% switch (currentTest) {
+                case "1": %>
+                  <OPTION><%=currentTest%></OPTION>
+                  <OPTION>2</OPTION>
+                   <% break; %><%
+                  case "2": %>
+                    <OPTION><%=currentTest%></OPTION>
+                    <OPTION>1</OPTION>
+                     <% break; %> <% } %>
+          </SELECT></td>
+            <td><SELECT name="updateCurrentResult" type="text" class="form-control" id="input-currentResult" required>
+            <OPTION><%=currentResult%></OPTION>
+              <% for(var i=1; i<=numbersResults; i++) { %>
+            <OPTION><%=[i]%></OPTION>
+             <% } %>
+          </SELECT></td>
+          <td><a href="<%=link%>">Start</a></td>
+          <td><button type="submit" class="btn btn-primary updateStudent" data-loading-text="Sending..."id="updateStudent">Update student</button></td>
+      </tr>
+  </table>
+  </div>
+</form>
+
+<div class="currentQuestion">
+<div id="textCurrentQuestion"><b>Current question: </div></b><div id="currentQuestion"><%=currentQuestion%></div>
+<br>
+<div id="textCurrentQuestion"><b>Current state: </div></b><div id="currentState"><%=currentState%></div>
+</div>
+
+<form class="form-deleteStudent" name="cabinet_deleteStudent">
+<button type="submit" class="btn btn-primary deleteStudent" data-loading-text="Sending..."id="deleteStudent">Delete student</button>
+</form>
+
+  <h2><b>Test results</b></h2>
+  <form class="form-resultsTest">
+  <div class="informationAboutStudentTest">
+  <table cellspacing="0" id="tl_results">
+    <tr>
+        <th>№</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Answer</th>
+        <th>Level of happiness</th>
+    </tr>
+</table>
+</div>
+<br><br>
+
+
+<h2><b>Category results</b></h2>
+<div class="informationAboutStudentTest">
+<table cellspacing="0" id="tl_category_results">
+  <tr>
+      <th>№</th>
+      <th>Category</th>
+      <th>Accept</th>
+      <th>Counter</th>
+  </tr>
+</table>
+</div>
+</form>
+
+
+
+
+<script>
+var config = {
+    apiKey: "AIzaSyBp77uO9nPjY8yGwjeBCuB2DFdsIL8Xpg8",
+    authDomain: "mobilesystem-df40d.firebaseapp.com",
+    databaseURL: "https://mobilesystem-df40d.firebaseio.com",
+    projectId: "mobilesystem-df40d",
+    storageBucket: "mobilesystem-df40d.appspot.com",
+    messagingSenderId: "855414029476"
+  };
+  firebase.initializeApp(config);
+
+// Отслеживаем текущий вопрос студента
+var refStudents = firebase.database().ref("students/" + "<%=id%>");
+var refCurrentQuestion = refStudents.child("/student_state/");
+
+
+// устанавливаем слушатель child_changed
+refStudents.on('child_changed', function(data) {
+// существующий текущий вопр был изменен, получаем снэпшот, берем оттуда данные и обновляем пользовательский интерфейс
+refCurrentQuestion.once("value")
+ .then(function(snapshotState) {
+   var currentQuestion = snapshotState.child('current_question').val();
+   var currentState = snapshotState.child('state').val();
+
+       var currentQuestionHTML = currentQuestion;
+       var currentStateHTML = currentState;
+       document.getElementById('currentQuestion').innerHTML = currentQuestionHTML;
+       document.getElementById('currentState').innerHTML = currentStateHTML;
+       console.log(currentQuestion + " studentState");
+ });
+});
+
+
+var refAnswer = firebase.database().ref("students/" + "<%=id%>" + "/tests/" + "<%=currentTest%>" + "/results/" + "<%=currentResult%>");
+//console.log("students/" + "<%=id%>" + "/tests/" + "<%=currentTest%>" + "/results/" + "<%=currentResult%>");
+
+// устанавливаем слушатель child_changed
+refAnswer.on('child_added', function(snapshot) {
+  // console.log(snapshot.child('answer').val());
+  // console.log(snapshot.child('category').val());
+  // console.log(snapshot.child('title').val());
+  var answer;
+  var levelHappiness;
+
+  if(snapshot.child('answer').val() == "-1") {
+     answer = "<font color=" + "#D50000" + ">Dislike</font>"
+   }
+   if(snapshot.child('answer').val() == "0") {
+     answer = "<font color=" + "#F9A825" + ">Swap</font>"
+   }
+    if(snapshot.child('answer').val() == "1") {
+     answer = "<font color=" + "#4CAF50"+ ">Like</font>"
+   }
+
+  if (snapshot.child('category').val() != null) {
+    $('#tl_results tbody').append('<tr cla ss="child"><td>' + (Number(snapshot.key) + 1) + '</td>' +
+                                                    '<td>' + snapshot.child('category').val() + '</td>' +
+                                                    '<td>' + snapshot.child('title').val() + '</td>' +
+                                                    '<td>' + answer + '</td>' +
+                                                    '<td>' + snapshot.child('pushHappines').val() + '</td>' +
+                                                           + '</tr>');
+                                                      }
+});
+
+
+// Обсчет результатов - сколько набрала какая категория и т.п
+var refCategory = firebase.database().ref("students/" + "<%=id%>" + "/tests/" + "<%=currentTest%>" + "/results/" + "<%=currentResult%>" + "/category/");
+
+refCategory.on('child_added', function(snapshotCountCategory) {
+
+  var category;
+  if(snapshotCountCategory.child('stateAccept').val() == "-1") {
+    category = "<td><font color=" + "#4CAF50" + ">Accept</font></td>"
+   }
+    if(snapshotCountCategory.child('stateAccept').val() == "1") {
+     category = "<td><font color=" + "#D50000"+ ">Not accept</font></td"
+   }
+
+   //console.log(category);
+   $('#tl_category_results tbody').append('<tr class="child"><td>' + (Number(snapshotCountCategory.key) + 1) + '</td>' +
+                                                             '<td>' + snapshotCountCategory.child('titleCategory').val() + '</td>' +
+                                                               category +
+                                                             + '</tr>');
+ });
+</script>
+
+
+
+<script>
+// Клиентский код //
+// Человек вводит логин, email,
+$(document.forms['cabinet_updateStudent']).on('submit', function() {
+var form = $(this);
+$('.error', form).html('');
+$(":submit", form).button("loading");
+// Этот логин, email, пароль отправляются на сервер
+$.ajax({
+  url: "/result_test/id<%=id%>", // роут: require('./registration').post
+  method: "POST",
+  data: form.serialize(),
+  complete: function() {
+    $(":submit", form).button("reset");
+  },
+  statusCode: {
+    // если ответ сервера 200 - перенаправляем человека в личный кабинет(успешно создали нового пользователя)
+    200: function() {
+    location.reload();
+    },
+    // если 403 - высвечивается ошибка(уже есть такой пользователь)
+    403: function(jqXHR) {
+      var error = JSON.parse(jqXHR.responseText);
+      $('.error', form).html(error.message);
+    }
+  }
+});  //window.location.href = "/";
+return false;
+
+});
+</script>
+
+<script>
+// Клиентский код //
+// Человек вводит логин, email,
+$(document.forms['cabinet_deleteStudent']).on('submit', function() {
+var form = $(this);
+$('.error', form).html('');
+$(":submit", form).button("loading");
+// Этот логин, email, пароль отправляются на сервер
+$.ajax({
+  url: "/deleteStudent/id<%=id%>", // роут: require('./registration').post
+  method: "POST",
+  data: form.serialize(),
+  complete: function() {
+    $(":submit", form).button("reset");
+  }
+  // ,
+  // statusCode: {
+  //   // если ответ сервера 200 - перенаправляем человека в личный кабинет(успешно создали нового пользователя)
+  //   200: function() {
+  //     form.html("Вы успешно зарегестрировались").addClass('alert-success');
+  //     window.location.href = "/personalArea";
+  //   }
+  //,
+  //   // если 403 - высвечивается ошибка(уже есть такой пользователь)
+  //   403: function(jqXHR) {
+  //     var error = JSON.parse(jqXHR.responseText);
+  //     $('.error', form).html(error.message);
+  //   }
+  // }
+});  //window.location.href = "/";
+//return false;
+window.location.href = "/personalArea";
+return false;
+location.reload();
+});
+</script>

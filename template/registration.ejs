@@ -1,0 +1,69 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/styleLogin.css">
+
+<% block('title') -%>
+
+<h1 id="AIT"><b>AIT</b></h1>
+
+<form class="form-signin" name="registration_form">
+  <h2><b><center>Registration</center></b></h2>
+  <h5><center>Please input email and password.</center></h5>
+  <div class="form-group">
+    <input name="email" type="email" class="form-control" id="input-email" placeholder="Email">
+  </div>
+  <div class="form-group">
+      <input name="password" type="password" class="form-control" id="input-password" placeholder="Password - (min 6 symbols)">
+  </div>
+  <div class="form-group">
+    <label class="btn-signin">
+      <button type="submit" class="btn btn-lg btn-primary btn-block" data-loading-text="Sending...">Enter</button>
+      <span class="help-block error"></span>
+      </label>
+  </div>
+    <a href="/">Back to Authorization page</a>
+</form>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+
+    <script>
+    // Клиентский код //
+    // Человек вводит логин, пароль
+      $(document.forms['registration_form']).on('submit', function() {
+        var form = $(this);
+
+        $('.error', form).html('');
+        $(":submit", form).button("loading");
+
+        // Этот логин, пароль отправляется на сервер
+        $.ajax({
+          url: "/registration", // роут: require('./login').post
+          method: "POST",
+          data: form.serialize(),
+          complete: function() {
+            $(":submit", form).button("reset");
+          }
+          ,
+          statusCode: {
+            // если ответ сервера 200 - перенаправляем человека в личный кабинет
+            200: function() {
+              form.html("Вы вошли в сайт").addClass('alert-success');
+              //window.location.href = "/personalArea";
+            },
+            // если 403 - высвечивается ошибка
+            403: function(jqXHR) {
+              var error = JSON.parse(jqXHR.responseText);
+              $('.error', form).html(error.message);
+            }
+          }
+        });
+      window.location.href = "/personalArea";
+      return false;
+      });
+
+    </script>

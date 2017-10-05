@@ -1,0 +1,372 @@
+<link rel="stylesheet" href="/css/styleTestSettings.css">
+<% layout('layout/page') -%>
+<% block('title') -%>
+
+<form class="form_testSetting" name="testSetting">
+<h3><b>Settings</b></h3>
+
+
+  <div class="checkbox">
+    <label><input type="checkbox" name="checkText" value="<%=checkText%>" id="checkText" >Text</label>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" name="checkSound" value="<%=checkSound%>" id="checkSound" >Sound</label>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" name="checkSwap" value="<%=checkSwap%>" id="checkSwap">Swap</label>
+  </div>
+  <div class="checkbox checkSwapFinger">
+    <label id="checkSwapFingerText"><input type="checkbox" name="checkSwapFinger" value="<%=checkSwapFinger%>" id="checkSwapFinger" >Finger</label>
+  </div>
+  <div class="checkbox checkSwapArrows">
+    <label id="checkSwapArrowsText"><input type="checkbox" name="checkSwapArrows" value="<%=checkSwapArrows%>" id="checkSwapArrows" >Arrows</label>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" name="checkProgressBar" value="<%=checkProgressBar%>" id="checkProgressBar" >Progress bar</label>
+  </div>
+  <!-- <div class="checkbox">
+    <label><input type="checkbox" name="checkBtnResult" value="<%=checkBtnResult%>"  id="checkBtnResult" disabled><div class="btnResult">Btn Results</div></label>
+  </div> -->
+
+  <div class="styleImages">
+
+  <h5><b><div class="styleImagesSwap">Style Images: Swap arrows</div></b></h5>
+  <input type="range" name="styleImagesSwap" value="<%=styleImagesSwap%>" min="0" max="1" id="styleImagesSwap" >
+
+  <!-- <button type="submit" class="btn btn-primary settings" data-loading-text="Adding..." disabled>Add</button> -->
+
+  <h5><b>Style Images: Like/Dislike</b></h5>
+  <input type="range" name="styleImagesLikeDislike" value="<%=styleImagesLikeDislike%>" min="0" max="1" id="styleImagesLikeDislike">
+
+
+  <h5><b>Style Image: STOP TEST</b></h5>
+  <input type="range" name="styleImageStopTest" value="<%=styleImageStopTest%>" min="0" max="1" id="styleImageStopTest">
+
+
+  <!-- <h5><b><div class="styleImageResults">Style Image: Results</div></b></h5>
+  <div class="inputStyleImageResults">
+    <input type="range" value="1" min="1" max="5" id="styleImagesResults" disabled>
+  </div>
+  <button type="button" class="btn btn-primary settings" data-loading-text="Adding..." disabled>Add</button>
+
+  <h5><b><div class="styleImageFinish">Style Image: Finish</div></b></h5>
+  <div class="inputStyleImageFinish">
+  <input type="range" value="1" min="1" max="5" id="styleImageFinish" disabled>
+  </div>
+  <button type="button" class="btn btn-primary settings" data-loading-text="Adding..." disabled>Add</button> -->
+
+  </div>
+
+
+    <br>
+
+
+
+  <br><br><br>
+  <div class="form-group">
+    <label class="btn-acceptSettings">
+      <button type="submit" class="btn btn-primary" id="updateTestSettings" data-loading-text="Sending...">Accept settings</button>
+      <span class="help-block error"></span>
+      </label>
+  </div>
+
+</form>
+  </div>
+
+<form class="form-testImages" name="testImages">
+  <h1><b>CT</b></h1>
+
+<div class="ImageStopTest">
+<img src="" class="img-responsive stopTest" id="imageStopTest">
+</div>
+
+    <div class="wrapper">
+
+    <div class="left">
+      <img src="" class="img-responsive notConstantly" id="imageBack">
+      <img src="" class="img-responsive constantly" id="imageLike">
+    </div>
+
+
+    <div class="center">
+      <h3 class="notConstantly" id="textQuestion">Text question</h3>
+      <img src="/imagesDefault/1234.png" class="img-responsive constantly">
+    </div>
+
+    <div class="right">
+      <img src="" class="img-responsive notConstantly" id="imageNext">
+      <img src="" class="img-responsive constantly" id="imageDislike">
+    </div>
+
+</div>
+    <br><br>
+
+    <div class="progress" id="progressBar">
+      <div class="progress-bar progress-bar-striped active" role="progressbar"
+      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+        40%
+      </div>
+    </div>
+
+<!-- <ul class="pagination">
+  <li class="active"><span>Test</span></li>
+</ul> -->
+
+
+<script>
+
+// Проверка наличия текста
+document.getElementById('checkText').onclick = function() {
+    if ( this.checked ) {
+  $("#textQuestion").css("opacity","1");
+    } else {
+       $("#textQuestion").css("opacity","0");
+    }
+};
+
+  if (document.getElementById('checkText').value == "false") {
+    $("#textQuestion").css("opacity","0");
+  }
+
+  // Проверка наличия свапа на стрелках
+  document.getElementById('checkSwap').onclick = function() {
+      if ( this.checked ) {
+        $("#checkSwapFinger").css("opacity","1");
+        $( "#checkSwapFinger" ).prop( "disabled", false );
+        $("#checkSwapFingerText").css("opacity","1");
+        $( "#checkSwapArrows" ).prop( "disabled", false );
+        $("#checkSwapArrows").css("opacity","1");
+        $("#checkSwapArrowsText").css("opacity","1");
+
+        $('#checkSwapFinger').prop('checked', true);
+        $('#checkSwapArrows').prop('checked', true);
+
+        $("#imageBack").css("opacity","1");
+        $("#imageNext").css("opacity","1");
+        $("#styleImagesSwap").css("opacity","1");
+        document.getElementById("styleImagesSwap").disabled = false;
+        $(".styleImagesSwap").css("opacity","1");
+
+      } else {
+        $("#checkSwapFinger").css("opacity","0.5");
+        $( "#checkSwapFinger" ).prop( "disabled", true );
+        $("#checkSwapFinger").removeAttr("checked"); // снимает галочку
+
+        $("#checkSwapArrows").css("opacity","0.5");
+        $( "#checkSwapArrows" ).prop( "disabled", true );
+        $("#checkSwapArrows").removeAttr("checked"); // снимает галочку
+
+        $("#checkSwapFingerText").css("opacity","0.5");
+        $("#checkSwapArrowsText").css("opacity","0.5");
+
+        $("#imageBack").css("opacity","0");
+        $("#imageNext").css("opacity","0");
+
+        $("#styleImagesSwap").css("opacity","0.5");
+       document.getElementById("styleImagesSwap").disabled = true;
+       $(".styleImagesSwap").css("opacity","0.5");
+
+      }
+  };
+
+  document.getElementById('checkSwapArrows').onclick = function() {
+      if ( this.checked ) {
+    $("#imageBack").css("opacity","1");
+    $("#imageNext").css("opacity","1");
+    $("#styleImagesSwap").css("opacity","1");
+    document.getElementById("styleImagesSwap").disabled = false;
+    $(".styleImagesSwap").css("opacity","1");
+      } else {
+         $("#imageBack").css("opacity","0");
+         $("#imageNext").css("opacity","0");
+         $("#styleImagesSwap").css("opacity","0.5");
+         $(".styleImagesSwap").css("opacity","0.5");
+        document.getElementById("styleImagesSwap").disabled = true;
+      }
+  };
+
+  if (document.getElementById('checkSwapArrows').value == "false") {
+    $("#imageBack").css("opacity","0");
+    $("#imageNext").css("opacity","0");
+  }
+
+  // Проверка наличия прогресс-бара
+  document.getElementById('checkProgressBar').onclick = function() {
+      if ( this.checked ) {
+    $("#progressBar").css("opacity","1");
+      } else {
+         $("#progressBar").css("opacity","0");
+      }
+  };
+
+  if (document.getElementById('checkProgressBar').value == "false") {
+    $("#progressBar").css("opacity","0");
+  }
+
+</script>
+
+
+<script>
+// Отрисовка галочки от значения из БД
+if (document.getElementById('checkText').value == "true") {
+      $('#checkText').prop('checked', true);
+    }
+if (document.getElementById('checkSound').value == "true") {
+    $('#checkSound').prop('checked', true);
+  }
+if (document.getElementById('checkSwap').value == "true") {
+    $('#checkSwap').prop('checked', true);
+  }
+if (document.getElementById('checkSwapFinger').value == "true") {
+    $('#checkSwapFinger').prop('checked', true);
+  }
+if (document.getElementById('checkSwapArrows').value == "true") {
+    $('#checkSwapArrows').prop('checked', true);
+  }
+if (document.getElementById('checkProgressBar').value == "true") {
+    $('#checkProgressBar').prop('checked', true);
+  }
+// if (document.getElementById('checkBtnResult').value == "true") {
+//     $('#checkBtnResult').prop('checked', true);
+//   }
+</script>
+
+
+
+<script>
+// Клиентский код //
+// name="testSetting" !!!
+  $(document.forms['testSetting']).on('submit', function() {
+    var form = $(this);
+
+    $('.error', form).html('');
+    $(":submit", form).button("loading");
+
+    // Этот логин, пароль отправляется на сервер
+    $.ajax({
+      url: "/updateTestSettings", // роут: require('./login').post
+      method: "POST",
+      data: form.serialize(),
+      complete: function() {
+        $(":submit", form).button("reset");
+      },
+      statusCode: {
+        // если ответ сервера 200 - перенаправляем человека в личный кабинет
+        200: function() {
+          //form.html("Вы вошли в сайт").addClass('alert-success');
+          location.reload();
+        },
+        // если 403 - высвечивается ошибка
+        403: function(jqXHR) {
+          var error = JSON.parse(jqXHR.responseText);
+          $('.error', form).html(error.message);
+        }
+      }
+    });
+  return false;
+  });
+</script>
+
+
+
+
+<script>
+  // Initialize Firebase
+  var config = {
+      apiKey: "AIzaSyBp77uO9nPjY8yGwjeBCuB2DFdsIL8Xpg8",
+      authDomain: "mobilesystem-df40d.firebaseapp.com",
+      databaseURL: "https://mobilesystem-df40d.firebaseio.com",
+      projectId: "mobilesystem-df40d",
+      storageBucket: "mobilesystem-df40d.appspot.com",
+      messagingSenderId: "855414029476"
+    };
+    firebase.initializeApp(config);
+
+  // Получаем доступ к Хранилищу profpref-c5ce0.appspot.com
+  var storage = firebase.app().storage("mobilesystem-df40d.appspot.com");
+
+      // Стиль назад и вперед
+      $("#styleImagesSwap").on("input change", function() {
+        var styleImagesSwap = $("#styleImagesSwap").val();
+
+        var urlBack = storage.ref("/manager_buttons/next_back/" + styleImagesSwap + "/" +"back.png");
+        var urlNext = storage.ref("/manager_buttons/next_back/" + styleImagesSwap + "/" +"next.png");
+
+        urlBack.getDownloadURL().then(function(url) {
+          console.log(url);
+          $("#imageBack").attr('src', url);
+        });
+        urlNext.getDownloadURL().then(function(url) {
+          console.log(url);
+          $("#imageNext").attr('src', url);
+        });
+       });
+
+  // Стиль лайка и дизлайка
+  $("#styleImagesLikeDislike").on("input change", function() {
+    var styleImagesLikeDislike = $("#styleImagesLikeDislike").val();
+    var urlLike = storage.ref("/manager_buttons/like_dislike/" + styleImagesLikeDislike + "/" +"like.png");
+    var urlDislike = storage.ref("/manager_buttons/like_dislike/" + styleImagesLikeDislike + "/" +"dislike.png");
+
+    urlLike.getDownloadURL().then(function(url) {
+      console.log(url);
+      $("#imageLike").attr('src', url);
+    });
+    urlDislike.getDownloadURL().then(function(url) {
+      console.log(url);
+      $("#imageDislike").attr('src', url);
+    });
+   });
+
+   // Стиль стоп теста
+   $("#styleImageStopTest").on("input change", function() {
+     var styleImageStopTest = $("#styleImageStopTest").val();
+     var urlStopTest = storage.ref("/manager_buttons/stop_test/" + styleImageStopTest + "/" +"stop.png");
+
+     urlStopTest.getDownloadURL().then(function(url) {
+       console.log(url);
+       $("#imageStopTest").attr('src', url);
+     });
+    });
+
+
+   /////////////////////////////////////////////////////////////////////////////////////////////
+   var styleImagesSwap = $("#styleImagesSwap").val();
+   var urlBack = storage.ref("/manager_buttons/next_back/" + styleImagesSwap + "/" +"back.png");
+   var urlNext = storage.ref("/manager_buttons/next_back/" + styleImagesSwap + "/" +"next.png");
+
+   urlBack.getDownloadURL().then(function(url) {
+     console.log(url);
+     $("#imageBack").attr('src', url);
+   });
+   urlNext.getDownloadURL().then(function(url) {
+     console.log(url);
+     $("#imageNext").attr('src', url);
+   });
+
+
+   var styleImagesLikeDislike = $("#styleImagesLikeDislike").val();
+   var urlLike = storage.ref("/manager_buttons/like_dislike/" + styleImagesLikeDislike + "/" +"like.png");
+   var urlDislike = storage.ref("/manager_buttons/like_dislike/" + styleImagesLikeDislike + "/" +"dislike.png");
+
+   urlLike.getDownloadURL().then(function(url) {
+     console.log(url);
+     $("#imageLike").attr('src', url);
+  });
+  urlDislike.getDownloadURL().then(function(url) {
+    console.log(url);
+    $("#imageDislike").attr('src', url);
+  });
+  //$("#styleImagesLikeDislike").attr('src', url);
+
+
+  var styleImageStopTest = $("#styleImageStopTest").val();
+  var urlStopTest = storage.ref("/manager_buttons/stop_test/" + styleImageStopTest + "/" +"stop.png");
+
+  urlStopTest.getDownloadURL().then(function(url) {
+    console.log(url);
+    $("#imageStopTest").attr('src', url);
+  });
+
+
+</script>
