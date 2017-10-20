@@ -18,7 +18,11 @@ h1 {
 }
 .informationAboutStudent {
   margin-left: 5%;
-	width: 90%;
+	width: 40%;
+}
+
+#input-updateNameStudent {
+	width: 200px;
 }
 
 .informationAboutStudent .form-control {
@@ -26,8 +30,8 @@ h1 {
 }
 
 .form-deleteStudent .deleteStudent {
-margin-left: 1000px;
-margin-top: -95px;
+margin-left: 400px;
+margin-top: -75px;
 background-color: red;
 border-color: red;
 color: white;

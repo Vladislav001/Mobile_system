@@ -6,7 +6,7 @@ var firebase = require('firebase'); //https://metanit.com/web/nodejs/4.10.php
 exports.get = function(req, res) {
 
   var links = [];  // массив в котором будут храниться сформированные адреса профилей юзеров
-	var usernames = []; // хранит имена юзеров
+	var emails = []; // хранит имена юзеров
 
 
 
@@ -19,6 +19,13 @@ exports.get = function(req, res) {
 
       ref.once("value")
         .then(function(snapshot) {
+
+          var refUsers = firebase.database().ref("Users");
+
+          refUsers.on("child_added", function(snapshotUser) {
+            links.push("result_test/id" + snapshotUser.key);
+            emails.push(snapshotUser.child('email').val());
+          });
 
             //Исправить как будут пользователи
 
@@ -35,8 +42,8 @@ exports.get = function(req, res) {
                 unsubscribe(); // убирает состояние
                 res.render("personalArea", {
                     email: user.email,
-                    logins: "1",
-                    links: "1"
+                    emails: emails,
+                    links: links,
                 });
 
         });

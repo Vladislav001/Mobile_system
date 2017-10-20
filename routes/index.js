@@ -9,6 +9,8 @@ module.exports = function(app) {
   app.post('/registration', require('./registration').post);
   app.get('/personalArea', require('./personalArea').get);
   app.get('/test_settings', checkAuth, require('./testSettings').get);
+  app.get('/result_test/id:idTag', checkAuth, require('./resultTest').get);
+  app.post('/result_test/id:idTag', require('./resultTest').post); // Обновление данных юзера  
 
 
   app.post('/addNewUser', require('./addNewUser').post);
