@@ -14,32 +14,31 @@
           <td><input name="updateEmailStudent" type="text" value="<%=emailStudent%>" class="form-control" id="input-updateNameStudent" placeholder="Name" required></td>
 
 
-          <td><button type="submit" class="btn btn-primary updateStudent" data-loading-text="Sending..."id="updateStudent">Update User</button></td>
+          <td><button type="submit" class="btn btn-primary updateStudent" data-loading-text="Sending..."id="updateStudent">Обновить данные</button></td>
       </tr>
   </table>
   </div>
 </form>
 
 <div class="currentQuestion">
-<div id="textCurrentQuestion"><b>Current question: </div></b><div id="currentQuestion"><%=currentQuestion%></div>
+<div id="textCurrentQuestion"><b>Текущий вопрос: </div></b><div id="currentQuestion"><%=currentQuestion%></div>
 <br>
 </div>
 
 <form class="form-deleteStudent" name="cabinet_deleteStudent">
-<button type="submit" class="btn btn-primary deleteStudent" data-loading-text="Sending..."id="deleteStudent">Delete student</button>
+<button type="submit" class="btn btn-primary deleteStudent" data-loading-text="Sending..."id="deleteStudent">Удалить пользователя</button>
 </form>
 
-  <h2><b>Test results</b></h2>
+  <h2><b>Результаты Теста</b></h2>
   <form class="form-resultsTest">
   <div class="informationAboutStudentTest">
   <table cellspacing="0" id="tl_results">
     <tr>
         <th>№</th>
-        <th>Question</th>
-        <th>Answer</th>
-        <th>Level of happiness</th>
+        <th>Ответ</th>
     </tr>
 </table>
+
 </div>
 <br><br>
 
@@ -75,39 +74,48 @@ refStudents.once("value")
 
 
 // Тут удалили refAnswer из за ejs
+var refAnswer = firebase.database().ref("Users/" + "<%=id%>" + "/test_results" );
 
 // устанавливаем слушатель child_changed
-// refAnswer.on('child_added', function(snapshot) {
-//   // console.log(snapshot.child('answer').val());
-//   // console.log(snapshot.child('category').val());
-//   // console.log(snapshot.child('title').val());
-//   var answer;
-//   var levelHappiness;
-//
-//   if(snapshot.child('answer').val() == "-1") {
-//      answer = "<font color=" + "#D50000" + ">Dislike</font>"
-//    }
-//    if(snapshot.child('answer').val() == "0") {
-//      answer = "<font color=" + "#F9A825" + ">Swap</font>"
-//    }
-//     if(snapshot.child('answer').val() == "1") {
-//      answer = "<font color=" + "#4CAF50"+ ">Like</font>"
-//    }
-//
-//   if (snapshot.child('category').val() != null) {
-//     $('#tl_results tbody').append('<tr cla ss="child"><td>' + (Number(snapshot.key) + 1) + '</td>' +
-//                                                     '<td>' + snapshot.child('category').val() + '</td>' +
-//                                                     '<td>' + snapshot.child('title').val() + '</td>' +
-//                                                     '<td>' + answer + '</td>' +
-//                                                     '<td>' + snapshot.child('pushHappines').val() + '</td>' +
-//                                                            + '</tr>');
-//                                                       }
-// });
+refAnswer.on('child_added', function(snapshot) {
 
+  var answer;
+  var countCorrectAnswer;
+
+    if(snapshot.child('answer').val() == "Неверно") {
+       answer = "<font color=" + "#D50000" + ">Неверно</font>"
+     }
+
+      if(snapshot.child('answer').val() == "Верно") {
+       answer = "<font color=" + "#4CAF50"+ ">Верно</font>"
+     }
+
+  if (snapshot.child('answer').val() != null) {
+    $('#tl_results tbody').append('<tr cla ss="child"><td>' + (Number(snapshot.key) + 1) + '</td>' +
+                                                    '<td>' + answer + '</td>' + '</tr>');
+                                                      }
+});
 
 </script>
 
+<script>
 
+  // google.load("visualization", "1", {packages:["corechart"]});
+  // google.setOnLoadCallback(drawChart);
+  // function drawChart() {
+  //  var data = google.visualization.arrayToDataTable([
+  //   ['Вопрос', 'Правильность'],
+  //   ['Верно',     78.09],
+  //   ['Неверно', 20.95]
+  //  ]);
+  //  var options = {
+  //   title: 'Результаты теста',
+  //   is3D: true
+  //  };
+  //  var chart = new google.visualization.PieChart(document.getElementById('air'));
+  //   chart.draw(data, options);
+  // }
+ </script>
 
 <script>
 // Клиентский код //

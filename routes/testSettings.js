@@ -5,14 +5,8 @@ exports.post = function(req, res, next) {
 
   var checkText = Boolean(req.body.checkText);
   checkText = String(checkText);
-  var checkSound = Boolean(req.body.checkSound);
-  checkSound = String(checkSound);
   var checkSwap = Boolean(req.body.checkSwap);
   checkSwap = String(checkSwap);
-  var checkSwapFinger = Boolean(req.body.checkSwapFinger);
-  checkSwapFinger = String(checkSwapFinger);
-  var checkSwapArrows = Boolean(req.body.checkSwapArrows);
-  checkSwapArrows = String(checkSwapArrows);
   var checkProgressBar = Boolean(req.body.checkProgressBar);
   checkProgressBar = String(checkProgressBar);
 
@@ -35,10 +29,7 @@ exports.post = function(req, res, next) {
 
           var refNewTestSettings = refNewTestSettings.update({
             text: checkText,
-            sound: checkSound,
             swap: checkSwap,
-            swap_finger: checkSwapFinger,
-            swap_arrows: checkSwapArrows,
             progress_bar: checkProgressBar
           });
 
@@ -75,12 +66,9 @@ exports.get = function(req, res) {
           refTestSettings.once("value")
             .then(function(snapshotSettings) {
               var checkText = snapshotSettings.child('text').val();
-              var checkSound = snapshotSettings.child('sound').val();
+
               var checkSwap = snapshotSettings.child('swap').val();
-              var checkSwapFinger = snapshotSettings.child('swap_finger').val();
-              var checkSwapArrows = snapshotSettings.child('swap_arrows').val();
               var checkProgressBar = snapshotSettings.child('progress_bar').val();
-              var checkBtnResult = snapshotSettings.child('btn_results').val();
 
               refTestManageButtons.once("value")
                 .then(function(snapshotManageButtons) {
@@ -91,12 +79,8 @@ exports.get = function(req, res) {
                   res.render("testSettings", {
 
                     checkText: checkText,
-                    checkSound: checkSound,
                     checkSwap: checkSwap,
-                    checkSwapFinger: checkSwapFinger,
-                    checkSwapArrows: checkSwapArrows,
                     checkProgressBar: checkProgressBar,
-                    checkBtnResult: checkBtnResult,
 
                     styleImagesSwap: styleImagesSwap,
                     styleImagesLikeDislike: styleImagesLikeDislike,
